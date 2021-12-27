@@ -1,0 +1,25 @@
+{
+  "name": "twelve-twitching-twinkies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theprattler/twelve-twitching-twinkies.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theprattler/twelve-twitching-twinkies/issues"
+  },
+  "homepage": "https://github.com/theprattler/twelve-twitching-twinkies#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3"
+  }
+}
