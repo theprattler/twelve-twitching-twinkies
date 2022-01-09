@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-//const cTable = require('console.table');
+const cTable = require('console.table');
 //const db = require('./db/connection');
 var mysql = require('mysql2');
 
@@ -79,50 +79,45 @@ const promptCategories = () => {
 };
 
 function viewDepartments() {
-  const sql = `SELECT * FROM department`;
-  db.query(sql, (err, data) => {
+  const sql = `SELECT department.id AS id, department.name AS department FROM department`;
+  db.query(sql, (err, rows) => {
     if (err) throw err;
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i].name + ' | ' + data[i].id);
-      
-    }
-    console.log(`
-      
+    console.table(rows);
+    /*console.log(`
       =====================================
-
-    `);
+    `);*/
     promptCategories();
   });
 };
 
 function viewRoles() {
-  const sql = `SELECT * FROM role`;
-  db.query(sql, (err, data) => {
+  const sql = `SELECT role.id,
+                      role.title,
+                      department.name AS department
+              FROM role
+              INNER JOIN department ON role.department_id = department.id`;
+  db.query(sql, (err, rows) => {
     if (err) throw err;
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i].title + ' | ' + data[i].id + ' | ' + data[i].department_id + ' | ' + data[i].salary);
-    }
-    console.log(`
-      
-      =====================================
-
-    `);
+    console.table(rows);
     promptCategories();
   });
 };
 
 function viewEmployees() {
-  const sql = `SELECT * FROM employee`;
-  db.query(sql, (err, data) => {
+  const sql = `SELECT employee.id,
+                      employee.first_name,
+                      employee.last_name,
+                      role.title,
+                      department.name AS department,
+                      role.salary,
+                      CONCAT (manager.first_name, " ", manager.last_name) AS manager
+              FROM employee
+              LEFT JOIN role ON employee.role_id = role.id
+              LEFT JOIN department ON role.department_id = department.id
+              LEFT JOIN employee manager ON employee.manager_id = manager.id`;
+  db.query(sql, (err, rows) => {
     if (err) throw err;
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i].id + ' | ' + data[i].first_name + ' | ' + data[i].last_name + ' | ' + data[i].role_id + ' | ' + data[i].manager_id);
-    }
-    console.log(`
-      
-      =====================================
-
-    `);
+    console.table(rows);
     promptCategories();
   });
 };
@@ -151,35 +146,32 @@ function addDepartment() {
 };
 
 function addRole () {
-  const sql = `SELECT * FROM department`;
-  db.query(sql, function (err, data) {
-    if (err) throw err;
-    inquirer.prompt([
-      {
-        type: 'input',
-        name: 'name',
-        message: 'What is the name of this role?'
-      },
-      {
-        type: 'input',
-        name: 'salary',
-        message: 'What is the salary for this role?'
-      },
-      {
-        type: 'list',
-        name: 'department',
-        message: 'Which department does this role belong to?',
-        choices: function () {
-          let updateDepartments = [];
-          for (var i = 0; i < data.length; i++) {
-            updateDepartments.push(data[i].name)
-          }
-          return updateDepartments;
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'name',
+      message: 'What is the name of this role?'
+    },
+    {
+      type: 'input',
+      name: 'salary',
+      message: 'What is the salary for this role?'
+    },
+    {
+      type: 'list',
+      name: 'department',
+      message: 'Which department does this role belong to?',
+      choices: function () {
+        let updateDepartments = [];
+        for (var i = 0; i < data.length; i++) {
+          updateDepartments.push(data[i].name)
         }
+        return updateDepartments;
       }
-    ])
-  });
-};
+    }
+  ])
+}
+
 
 //function addEmployee() {}
 
