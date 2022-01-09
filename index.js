@@ -84,7 +84,13 @@ function viewDepartments() {
     if (err) throw err;
     for (var i = 0; i < data.length; i++) {
       console.log(data[i].name + ' | ' + data[i].id);
+      
     }
+    console.log(`
+      
+      =====================================
+
+    `);
     promptCategories();
   });
 };
@@ -96,6 +102,11 @@ function viewRoles() {
     for (var i = 0; i < data.length; i++) {
       console.log(data[i].title + ' | ' + data[i].id + ' | ' + data[i].department_id + ' | ' + data[i].salary);
     }
+    console.log(`
+      
+      =====================================
+
+    `);
     promptCategories();
   });
 };
@@ -107,6 +118,69 @@ function viewEmployees() {
     for (var i = 0; i < data.length; i++) {
       console.log(data[i].id + ' | ' + data[i].first_name + ' | ' + data[i].last_name + ' | ' + data[i].role_id + ' | ' + data[i].manager_id);
     }
+    console.log(`
+      
+      =====================================
+
+    `);
     promptCategories();
   });
 };
+
+function addDepartment() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'departmentName',
+      message: 'What is the name of the new department?'
+    }
+  ])
+  .then(function (answer) {
+    const sql = `INSERT INTO department (name) VALUES (?)`;
+    db.query(sql, answer.departmentName, (err, result) => {
+      if (err) throw err;
+      console.log(answer.departmentName + " has been added");
+      console.log(`
+      
+        =====================================
+
+      `);
+      promptCategories();
+    })
+  });
+};
+
+function addRole () {
+  const sql = `SELECT * FROM department`;
+  db.query(sql, function (err, data) {
+    if (err) throw err;
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the name of this role?'
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: 'What is the salary for this role?'
+      },
+      {
+        type: 'list',
+        name: 'department',
+        message: 'Which department does this role belong to?',
+        choices: function () {
+          let updateDepartments = [];
+          for (var i = 0; i < data.length; i++) {
+            updateDepartments.push(data[i].name)
+          }
+          return updateDepartments;
+        }
+      }
+    ])
+  });
+};
+
+//function addEmployee() {}
+
+//function updateEmployeeRole() {}
