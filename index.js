@@ -79,17 +79,34 @@ const promptCategories = () => {
 };
 
 function viewDepartments() {
-  //router.get('/departments', (req, data) => {
-    const sql = `SELECT * FROM department`;
-
-    db.query(sql, (err, data) => {
-      if (err) throw err;
-      for (var i = 0; i < data.length; i++) {
-        console.log(data[i].name + ' | ' + data[i].id);
-      }
-      promptCategories();
-    });
-      
+  const sql = `SELECT * FROM department`;
+  db.query(sql, (err, data) => {
+    if (err) throw err;
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i].name + ' | ' + data[i].id);
+    }
+    promptCategories();
+  });
 };
 
-//promptCategories();
+function viewRoles() {
+  const sql = `SELECT * FROM role`;
+  db.query(sql, (err, data) => {
+    if (err) throw err;
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i].title + ' | ' + data[i].id + ' | ' + data[i].department_id + ' | ' + data[i].salary);
+    }
+    promptCategories();
+  });
+};
+
+function viewEmployees() {
+  const sql = `SELECT * FROM employee`;
+  db.query(sql, (err, data) => {
+    if (err) throw err;
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i].id + ' | ' + data[i].first_name + ' | ' + data[i].last_name + ' | ' + data[i].role_id + ' | ' + data[i].manager_id);
+    }
+    promptCategories();
+  });
+};
