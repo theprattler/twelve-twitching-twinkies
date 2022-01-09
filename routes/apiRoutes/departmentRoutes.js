@@ -1,22 +1,28 @@
-const express = require('express');
+/*const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
 
 // VIEW all departments
-router.get('/departments', (req, res) => {
-  const sql = `SELECT * FROM department`;
+function viewDeparments() {
+  router.get('/departments', (req, data) => {
+    const sql = `SELECT * FROM department`;
 
-  db.query(sql, (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json({
-      message: 'success',
-      data: rows
+    db.query(sql, (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: 'success',
+        data: rows
+      });
+      for (var i = 0; i < data.length; i++) {
+        console.log(data[i].name);
+      }
+      promptCategories();
     });
   });
-});
+};
 
 // ADD a department
 router.post('/departments', ({ body }, res) => {
@@ -35,4 +41,4 @@ router.post('/departments', ({ body }, res) => {
   });
 });
 
-module.exports = router;
+module.exports = { router, viewDeparments };*/

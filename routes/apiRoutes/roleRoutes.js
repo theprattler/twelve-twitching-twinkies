@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
 
@@ -35,4 +35,4 @@ router.post('/roles', ({ body }, res) => {
   });
 });
 
-module.exports = router;
+module.exports = router;*/
