@@ -75,6 +75,7 @@ const promptCategories = () => {
 
       case 'Exit':
       // EXITS the database
+      console.log('Goodbye');
       process.exit(0);
     }
   })
@@ -250,4 +251,56 @@ function addEmployee() {
   })
 };
 
-//function updateEmployeeRole() {}
+// UPDATE an employee's role
+function updateEmployeeRole() {
+  const sqlEmployee = `SELECT * FROM employee`;
+  db.query(sqlEmployee, (err, data) => {
+    if (err) throw err;
+
+    const employees = data.map(({ id, first_name, last_name }) => ({ name: first_name + ' ' + last_name, value: id }));
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'employee',
+        message: 'Which EMPLOYEE will you update?',
+        choices: employees
+      }
+    ])
+    .then(employeeSelection => {
+      const employee = employeeSelection.employee;
+      const params = [];
+      params.push(employee);
+      
+      const sqlRole = `SELECT * FROM role`;
+      db.query(sqlRole, (err, data) => {
+        if (err) throw err;
+
+        const roles = data.map(({ id, title }) => ({ name: title, value: id }));
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'role',
+            message: 'Which ROLE will this employee now have?',
+            choices: roles
+          }
+        ])
+        .then(roleSelection => {
+          const role = roleSelection.role;
+          params.push(role);
+
+          let employee = params[0]
+          params[0] = role
+          params[1] = employee
+
+          const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+          db.query(sql, params, (err, result) => {
+            if (err) throw err;
+            
+            console.log("The employee's role has been updated");
+            promptCategories();
+          })
+        })
+      })
+    })
+  })
+};
