@@ -68,5 +68,3 @@ VALUES
   ('Meredith', 'Palmer', 8, 1),
   ('Ryan', 'Howard', 9, 1),
   ('Kelly', 'Kapoor', 4, 1);
-
-SELECT * FROM employeeTracker.department;

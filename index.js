@@ -2,19 +2,20 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 var mysql = require('mysql2');
 
+// secure mysql login info
+require('dotenv').config()
+
 // database connection
 const db = mysql.createConnection({
   host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'Shaggy307!',
+  user: process.env.DB_USER,
+  password: process.env.DB_PW,
   database: 'employeeTracker'
 });
 
 db.connect(err => {
   if (err) throw err;
-  console.log('Database connected');
-  
+  console.log('Greetings! Database connected');
   console.log(`
   ================
   EMPLOYEE TRACKER
@@ -95,7 +96,8 @@ function viewDepartments() {
 function viewRoles() {
   const sql = `SELECT role.id,
                       role.title,
-                      department.name AS department
+                      department.name AS department,
+                      role.salary
               FROM role
               INNER JOIN department ON role.department_id = department.id`;
   db.query(sql, (err, rows) => {
@@ -295,7 +297,6 @@ function updateEmployeeRole() {
           const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
           db.query(sql, params, (err, result) => {
             if (err) throw err;
-            
             console.log("The employee's role has been updated");
             promptCategories();
           })
